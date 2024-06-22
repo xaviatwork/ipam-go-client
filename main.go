@@ -19,4 +19,14 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Println(lzranges)
+<<<<<<< HEAD
+=======
+
+	lzrange, err := ipam.RangeById(2)
+	if err != nil {
+		fmt.Printf("IPAM returned %s\n", err.Error())
+		os.Exit(1)
+	}
+	fmt.Printf("IPAM Range: %+v\n", lzrange)
+>>>>>>> flags
 }
