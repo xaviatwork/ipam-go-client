@@ -35,11 +35,10 @@ func main() {
 			// https://github.com/GoogleCloudPlatform/professional-services/blob/main/tools/ipam-autopilot/container/api.go#L81
 			getRangeById(id, ipam)
 		case parent != 0:
-			getRangesWithSameParentSubnet(parent, ipam)
+			getRangesWithParent(parent, ipam)
 		case searchString != "":
 			searchStringInRanges(searchString, ipam)
-		default:
-			// all ranges
+		default: // all ranges
 			searchStringInRanges("", ipam)
 		}
 	case "domains":

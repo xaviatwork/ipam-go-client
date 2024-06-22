@@ -16,7 +16,7 @@ func getRangeById(id int, ipam ipamclient.LzIpam) {
 	fmt.Printf("%s\n", iprange.String())
 }
 
-func getRangesWithSameParentSubnet(parent int, ipam ipamclient.LzIpam) {
+func getRangesWithParent(parent int, ipam ipamclient.LzIpam) {
 	ipRanges, err := ipam.Ranges()
 	if err != nil {
 		fmt.Printf("IPAM response: %s\n", err.Error())
