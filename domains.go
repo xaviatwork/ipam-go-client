@@ -13,6 +13,10 @@ func getDomainById(id int, ipam ipamclient.LzIpam) {
 		fmt.Printf("IPAM response: %s\n", err.Error())
 		os.Exit(1)
 	}
+	if pretty {
+		fmt.Printf("%s\n", domain.PrettyString())
+		return
+	}
 	fmt.Printf("%s\n", domain.String())
 }
 func searchStringInDomains(searchString string, ipam ipamclient.LzIpam) {
@@ -23,6 +27,10 @@ func searchStringInDomains(searchString string, ipam ipamclient.LzIpam) {
 	}
 	for _, d := range *domains {
 		if ipamclient.SearchString(searchString, d.Name, d.Vpcs) {
+			if pretty {
+				fmt.Printf("%s\n", d.PrettyString())
+				continue
+			}
 			fmt.Printf("%s", d.String())
 		}
 	}

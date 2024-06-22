@@ -13,6 +13,10 @@ func getRangeById(id int, ipam ipamclient.LzIpam) {
 		fmt.Printf("IPAM response: %s\n", err.Error())
 		os.Exit(1)
 	}
+	if pretty {
+		fmt.Printf("%s\n", iprange.PrettyString())
+		return
+	}
 	fmt.Printf("%s\n", iprange.String())
 }
 
@@ -24,6 +28,10 @@ func getRangesWithParent(parent int, ipam ipamclient.LzIpam) {
 	}
 	for _, r := range *ipRanges {
 		if r.Parent_id == parent {
+			if pretty {
+				fmt.Printf("%s\n", r.PrettyString())
+				continue
+			}
 			fmt.Printf("%s", r.String())
 		}
 	}
@@ -37,6 +45,10 @@ func searchStringInRanges(searchString string, ipam ipamclient.LzIpam) {
 	}
 	for _, r := range *ipRanges {
 		if ipamclient.SearchString(searchString, r.Name, r.Cidr) {
+			if pretty {
+				fmt.Printf("%s\n", r.PrettyString())
+				continue
+			}
 			fmt.Printf("%s", r.String())
 		}
 	}

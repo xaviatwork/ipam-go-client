@@ -12,17 +12,20 @@ func parseCmdFlags(args []string) {
 	switch cmd {
 	case "ranges":
 		flags := flag.NewFlagSet(cmd, flag.ExitOnError)
-		flags.StringVar(&searchString, "search", "", "search string in range Name and CIDR fields")
+		flags.BoolVar(&pretty, "pretty", false, "pretty print range")
 		flags.IntVar(&id, "id", 0, "get range with given id")
 		flags.IntVar(&parent, "parent", 0, "get ranges with given parent")
+		flags.StringVar(&searchString, "search", "", "search string in range Name and CIDR fields")
 		err := flags.Parse(args[1:])
 		if err != nil {
 			log.Printf("%s\n", err.Error())
 		}
+
 	case "domains":
 		flags := flag.NewFlagSet(cmd, flag.ExitOnError)
-		flags.StringVar(&searchString, "search", "", "search string in routing domain Id and VPCs fields")
+		flags.BoolVar(&pretty, "pretty", false, "pretty print range")
 		flags.IntVar(&id, "id", 0, "get domain with id")
+		flags.StringVar(&searchString, "search", "", "search string in routing domain Id and VPCs fields")
 		err := flags.Parse(args[1:])
 		if err != nil {
 			log.Printf("%s\n", err.Error())

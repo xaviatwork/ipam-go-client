@@ -11,6 +11,7 @@ import (
 var cmd string
 var id int
 var parent int
+var pretty bool
 var searchString string
 
 func main() {

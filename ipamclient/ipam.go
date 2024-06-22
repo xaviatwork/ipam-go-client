@@ -1,6 +1,8 @@
 package ipamclient
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -23,8 +25,32 @@ func (r *Range) String() string {
 	return fmt.Sprintf(`{"cidr": "%s", "name": "%s", "parent": %d, "domain": %d, "id": %d}`, r.Cidr, r.Name, r.Parent_id, r.Routing_domain_id, r.Subnet_id)
 }
 
+func (r *Range) PrettyString() string {
+	pretty := bytes.Buffer{}
+	b, err := json.Marshal(r)
+	if err != nil {
+		return r.String()
+	}
+	if err := json.Indent(&pretty, b, "", "  "); err != nil {
+		return r.String()
+	}
+	return pretty.String()
+}
+
 func (d *RoutingDomain) String() string {
 	return fmt.Sprintf(`{"id": %d, "name": "%s", "vpcs": "%s"}`, d.Id, d.Name, d.Vpcs)
+}
+
+func (d *RoutingDomain) PrettyString() string {
+	pretty := bytes.Buffer{}
+	b, err := json.Marshal(d)
+	if err != nil {
+		return d.String()
+	}
+	if err := json.Indent(&pretty, b, "", "  "); err != nil {
+		return d.String()
+	}
+	return pretty.String()
 }
 
 // SearchString returns true if any of the ss[1:] strings contains ss[0]
