@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/xaviatwork/ipam-client/ipamclient"
@@ -53,6 +52,6 @@ func main() {
 			searchStringInDomains("", ipam)
 		}
 	case "status":
-		log.Printf("not implemented yet\n")
+		ipam.Status()
 	}
 }

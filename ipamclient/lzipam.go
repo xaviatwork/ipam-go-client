@@ -89,3 +89,12 @@ func (lzipam *LzIpam) doRequest(url string) ([]byte, error) {
 	}
 	return body, nil
 }
+
+func (lzipam *LzIpam) Status() error {
+	b, err := lzipam.doRequest(lzipam.BaseUrl)
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(b))
+	return nil
+}

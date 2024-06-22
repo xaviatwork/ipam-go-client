@@ -38,9 +38,13 @@ func parseCmdFlags(args []string) {
 
 func usage() {
 	fmt.Printf(`Usage:
-	ipam ranges                  : all subnet ranges
-	ipam ranges -id <int>        : range with Subnet Id equal to <int>
-	ipam ranges -parent <int>    : all subnet ranges with a parent Subnet Id matching <int>
-	ipam ranges -search <string> : all subnet ranges that contains <string> in the subnet's Name or CIDR fields
+  ipam ranges                   : all subnet ranges
+  ipam ranges -id <int>         : range with Subnet Id equal to <int>
+  ipam ranges -parent <int>     : all subnet ranges with a parent Subnet Id matching <int>
+  ipam ranges -search <string>  : all subnet ranges that contains <string> in the subnet's Name or CIDR fields
+
+  ipam domains                  : all routing domains
+  ipam domains -id <int>        : routing domain with Id equal to <int>
+  ipam domains -search <string> : all routing domains that contains <string> in the domains's Name or VPCs fields
 `)
 }
