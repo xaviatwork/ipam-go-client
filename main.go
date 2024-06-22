@@ -18,6 +18,10 @@ func main() {
 	flag.Usage = func() { usage() }
 	flag.Parse()
 	// cmd flags
+	if len(os.Args) < 2 {
+		usage()
+		os.Exit(1)
+	}
 	parseCmdFlags(flag.Args())
 
 	ipam := ipamclient.LzIpam{BaseUrl: os.Getenv("IPAM_URL")}
@@ -43,8 +47,8 @@ func main() {
 	case "domains":
 		switch {
 		case id != 0:
-			// if the range is not found, IPAM Autopilot returns a 503 Service Unavailable error
-			// https://github.com/GoogleCloudPlatform/professional-services/blob/main/tools/ipam-autopilot/container/api.go#L81
+			// if the domain is not found, IPAM Autopilot returns a 503 Service Unavailable error
+			// https://github.com/GoogleCloudPlatform/professional-services/blob/main/tools/ipam-autopilot/container/api.go#L370
 			getDomainById(id, ipam)
 		case searchString != "":
 			searchStringInDomains(searchString, ipam)
