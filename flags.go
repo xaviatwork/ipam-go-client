@@ -12,7 +12,7 @@ func parseCmdFlags(args []string) {
 	switch cmd {
 	case "ranges":
 		flags := flag.NewFlagSet(cmd, flag.ExitOnError)
-		flags.StringVar(&searchString, "search", "", "search string in range Id and CIDR fields")
+		flags.StringVar(&searchString, "search", "", "search string in range Name and CIDR fields")
 		flags.IntVar(&id, "id", 0, "get range with given id")
 		flags.IntVar(&parent, "parent", 0, "get ranges with given parent")
 		err := flags.Parse(args[1:])
@@ -37,5 +37,10 @@ func parseCmdFlags(args []string) {
 }
 
 func usage() {
-	fmt.Printf("usage:\n")
+	fmt.Printf(`Usage:
+	ipam ranges                  : all subnet ranges
+	ipam ranges -id <int>        : range with Subnet Id equal to <int>
+	ipam ranges -parent <int>    : all subnet ranges with a parent Subnet Id matching <int>
+	ipam ranges -search <string> : all subnet ranges that contains <string> in the subnet's Name or CIDR fields
+`)
 }
