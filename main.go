@@ -42,7 +42,16 @@ func main() {
 			searchStringInRanges("", ipam)
 		}
 	case "domains":
-		log.Printf("not implemented yet\n")
+		switch {
+		case id != 0:
+			// if the range is not found, IPAM Autopilot returns a 503 Service Unavailable error
+			// https://github.com/GoogleCloudPlatform/professional-services/blob/main/tools/ipam-autopilot/container/api.go#L81
+			getDomainById(id, ipam)
+		case searchString != "":
+			searchStringInDomains(searchString, ipam)
+		default: // all Domainss
+			searchStringInDomains("", ipam)
+		}
 	case "status":
 		log.Printf("not implemented yet\n")
 	}

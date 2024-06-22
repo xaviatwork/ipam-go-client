@@ -6,7 +6,7 @@ import (
 )
 
 type RoutingDomain struct {
-	Id   int    `json:"domain"`
+	Id   int    `json:"id"`
 	Name string `json:"name"`
 	Vpcs string `json:"vpcs"` // associated VPCs that should be tracked for subnet creation
 }
@@ -23,10 +23,14 @@ func (r *Range) String() string {
 	return fmt.Sprintf(`{"cidr": "%s", "name": "%s", "parent": %d, "domain": %d, "id": %d}`, r.Cidr, r.Name, r.Parent_id, r.Routing_domain_id, r.Subnet_id)
 }
 
+func (d *RoutingDomain) String() string {
+	return fmt.Sprintf(`{"id": %d, "name": "%s", "vpcs": "%s"}`, d.Id, d.Name, d.Vpcs)
+}
+
 // SearchString returns true if any of the ss[1:] strings contains ss[0]
 //
 //	All strings are converted to lowercase to compare them.
-func (r *Range) SearchString(ss ...string) bool {
+func SearchString(ss ...string) bool {
 	searchString := strings.ToLower(ss[0])
 	found := false
 	for _, s := range ss[1:] {
@@ -40,6 +44,6 @@ func (r *Range) SearchString(ss ...string) bool {
 type IpamAutopilot interface {
 	Ranges() (*[]Range, error)
 	RangeById(id int) (*Range, error)
-	// RoutingDomains() ([]RoutingDomain, error)
-	// RoutingDomainById(id int) (*RoutingDomain, error)
+	RoutingDomains() ([]RoutingDomain, error)
+	RoutingDomainById(id int) (*RoutingDomain, error)
 }

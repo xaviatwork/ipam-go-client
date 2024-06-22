@@ -40,6 +40,30 @@ func (lzipam *LzIpam) RangeById(id int) (*Range, error) {
 	return lzrange, nil
 }
 
+func (lzipam *LzIpam) RoutingDomains() (*[]RoutingDomain, error) {
+	domains := &[]RoutingDomain{}
+	b, err := lzipam.doRequest(fmt.Sprintf("%s/domains", lzipam.BaseUrl))
+	if err != nil {
+		return domains, err
+	}
+	if err := json.Unmarshal(b, &domains); err != nil {
+		return domains, err
+	}
+	return domains, nil
+}
+
+func (lzipam *LzIpam) RoutingDomainById(id int) (*RoutingDomain, error) {
+	routingdomain := &RoutingDomain{}
+	b, err := lzipam.doRequest(fmt.Sprintf("%s/domains/%d", lzipam.BaseUrl, id))
+	if err != nil {
+		return routingdomain, err
+	}
+	if err := json.Unmarshal(b, &routingdomain); err != nil {
+		return routingdomain, err
+	}
+	return routingdomain, nil
+}
+
 func (lzipam *LzIpam) doRequest(url string) ([]byte, error) {
 	client := http.Client{}
 	request, err := http.NewRequest("GET", url, nil)

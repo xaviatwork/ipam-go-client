@@ -36,7 +36,7 @@ func searchStringInRanges(searchString string, ipam ipamclient.LzIpam) {
 		os.Exit(1)
 	}
 	for _, r := range *ipRanges {
-		if r.SearchString(searchString, r.Name, r.Cidr) {
+		if ipamclient.SearchString(searchString, r.Name, r.Cidr) {
 			fmt.Printf("%s", r.String())
 		}
 	}
