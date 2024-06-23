@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/xaviatwork/ipam/ipamautopilot"
 )
@@ -135,7 +136,7 @@ func SearchStringInRanges(ipam ipamautopilot.Ipam, opts Opts) {
 		os.Exit(1)
 	}
 	for _, r := range *ipRanges {
-		if ipamautopilot.SearchString(opts.SearchString, r.Name, r.Cidr) {
+		if searchString(opts.SearchString, r.Name, r.Cidr) {
 			if opts.Pretty {
 				fmt.Printf("%s\n", r.PrettyString())
 				continue
@@ -164,7 +165,7 @@ func SearchStringInDomains(ipam ipamautopilot.Ipam, opts Opts) {
 		os.Exit(1)
 	}
 	for _, d := range *domains {
-		if ipamautopilot.SearchString(opts.SearchString, d.Name, d.Vpcs) {
+		if searchString(opts.SearchString, d.Name, d.Vpcs) {
 			if opts.Pretty {
 				fmt.Printf("%s\n", d.PrettyString())
 				continue
@@ -172,4 +173,16 @@ func SearchStringInDomains(ipam ipamautopilot.Ipam, opts Opts) {
 			fmt.Printf("%s", d.String())
 		}
 	}
+}
+
+// SearchString returns true if any of the ss[1:] strings contains ss[0]
+func searchString(ss ...string) bool {
+	searchString := strings.ToLower(ss[0])
+	found := false
+	for _, s := range ss[1:] {
+		if strings.Contains(strings.ToLower(s), searchString) {
+			found = true
+		}
+	}
+	return found
 }

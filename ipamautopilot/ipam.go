@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"strings"
 )
 
 type Ipam interface {
@@ -58,18 +57,4 @@ func (d *RoutingDomain) PrettyString() string {
 		return d.String()
 	}
 	return pretty.String()
-}
-
-// SearchString returns true if any of the ss[1:] strings contains ss[0]
-//
-//	All strings are converted to lowercase to compare them.
-func SearchString(ss ...string) bool {
-	searchString := strings.ToLower(ss[0])
-	found := false
-	for _, s := range ss[1:] {
-		if strings.Contains(strings.ToLower(s), searchString) {
-			found = true
-		}
-	}
-	return found
 }
