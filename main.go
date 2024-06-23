@@ -20,7 +20,7 @@ func main() {
 	}
 	opts := client.ParseCmdFlags(flag.Args())
 
-	ipam := client.LzIpam{} // Implements ipamautopilot.Ipam
+	ipam := client.GpsIpam{} // Implements ipamautopilot.Ipam
 	ipam.Source = os.Getenv("IPAM_SOURCE")
 	if ipam.Source == "" {
 		fmt.Println("No IPAM source provided. Please set IPAM_SOURCE env variable")

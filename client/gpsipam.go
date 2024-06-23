@@ -10,13 +10,13 @@ import (
 	"github.com/xaviatwork/ipam/ipamautopilot"
 )
 
-type LzIpam struct {
+type GpsIpam struct {
 	Source string
 }
 
-func (lzipam LzIpam) RangeById(id int) (*ipamautopilot.Range, error) {
+func (gpsipam GpsIpam) RangeById(id int) (*ipamautopilot.Range, error) {
 	lzrange := &ipamautopilot.Range{}
-	b, err := lzipam.doRequest(fmt.Sprintf("%s/ranges/%d", lzipam.Source, id))
+	b, err := gpsipam.doRequest(fmt.Sprintf("%s/ranges/%d", gpsipam.Source, id))
 	if err != nil {
 		return lzrange, err
 	}
@@ -25,9 +25,9 @@ func (lzipam LzIpam) RangeById(id int) (*ipamautopilot.Range, error) {
 	}
 	return lzrange, nil
 }
-func (lzipam LzIpam) Ranges() (*[]ipamautopilot.Range, error) {
+func (gpsipam GpsIpam) Ranges() (*[]ipamautopilot.Range, error) {
 	ranges := &[]ipamautopilot.Range{}
-	b, err := lzipam.doRequest(fmt.Sprintf("%s/ranges", lzipam.Source))
+	b, err := gpsipam.doRequest(fmt.Sprintf("%s/ranges", gpsipam.Source))
 	if err != nil {
 		return ranges, err
 	}
@@ -36,9 +36,9 @@ func (lzipam LzIpam) Ranges() (*[]ipamautopilot.Range, error) {
 	}
 	return ranges, nil
 }
-func (lzipam LzIpam) RoutingDomainById(id int) (*ipamautopilot.RoutingDomain, error) {
+func (gpsipam GpsIpam) RoutingDomainById(id int) (*ipamautopilot.RoutingDomain, error) {
 	routingdomain := &ipamautopilot.RoutingDomain{}
-	b, err := lzipam.doRequest(fmt.Sprintf("%s/domains/%d", lzipam.Source, id))
+	b, err := gpsipam.doRequest(fmt.Sprintf("%s/domains/%d", gpsipam.Source, id))
 	if err != nil {
 		return routingdomain, err
 	}
@@ -47,9 +47,9 @@ func (lzipam LzIpam) RoutingDomainById(id int) (*ipamautopilot.RoutingDomain, er
 	}
 	return routingdomain, nil
 }
-func (lzipam LzIpam) RoutingDomains() (*[]ipamautopilot.RoutingDomain, error) {
+func (gpsipam GpsIpam) RoutingDomains() (*[]ipamautopilot.RoutingDomain, error) {
 	domains := &[]ipamautopilot.RoutingDomain{}
-	b, err := lzipam.doRequest(fmt.Sprintf("%s/domains", lzipam.Source))
+	b, err := gpsipam.doRequest(fmt.Sprintf("%s/domains", gpsipam.Source))
 	if err != nil {
 		return domains, err
 	}
@@ -59,22 +59,18 @@ func (lzipam LzIpam) RoutingDomains() (*[]ipamautopilot.RoutingDomain, error) {
 	return domains, nil
 }
 
-// func (lzipam LzIpam) Source() string {
-// 	return os.Getenv("IPAM_SOURCE")
-// }
-
-func (lzipam LzIpam) getToken() string {
+func (gpsipam GpsIpam) getToken() string {
 	return os.Getenv("IPAM_TOKEN")
 }
 
-func (lzipam LzIpam) doRequest(url string) ([]byte, error) {
+func (gpsipam GpsIpam) doRequest(url string) ([]byte, error) {
 	client := http.Client{}
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return []byte{}, err
 	}
 	request.Header.Add("content-type", "application/json")
-	request.Header.Add("Authorization", "bearer "+lzipam.getToken())
+	request.Header.Add("Authorization", "bearer "+gpsipam.getToken())
 
 	response, err := client.Do(request)
 	if err != nil {
@@ -93,8 +89,8 @@ func (lzipam LzIpam) doRequest(url string) ([]byte, error) {
 	return body, nil
 }
 
-func (lzipam LzIpam) Status() error {
-	b, err := lzipam.doRequest(lzipam.Source)
+func (gpsipam GpsIpam) Status() error {
+	b, err := gpsipam.doRequest(gpsipam.Source)
 	if err != nil {
 		return err
 	}
