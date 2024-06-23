@@ -3,60 +3,59 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
-	"github.com/xaviatwork/ipam-client/ipamclient"
+	"github.com/xaviatwork/ipam/client"
 )
-
-var cmd string
-var id int
-var parent int
-var pretty bool
-var searchString string
 
 func main() {
 	// main flags (just -h, --help)
-	flag.Usage = func() { usage() }
+	flag.Usage = func() { client.Usage() }
 	flag.Parse()
 	// cmd flags
 	if len(os.Args) < 2 {
-		usage()
+		client.Usage()
 		os.Exit(1)
 	}
-	parseCmdFlags(flag.Args())
+	opts := client.ParseCmdFlags(flag.Args())
 
-	ipam := ipamclient.LzIpam{BaseUrl: os.Getenv("IPAM_URL")}
-	if ipam.BaseUrl == "" {
-		fmt.Println("No IPAM url provided. Please set IPAM_URL env variable")
+	ipam := client.LzIpam{} // Implements ipamautopilot.Ipam
+	ipam.Source = os.Getenv("IPAM_SOURCE")
+	if ipam.Source == "" {
+		fmt.Println("No IPAM source provided. Please set IPAM_SOURCE env variable")
 		os.Exit(1)
 	}
 
-	switch cmd {
+	switch opts.Cmd {
 	case "ranges":
 		switch {
-		case id != 0:
+		case opts.Id != 0:
 			// if the range is not found, IPAM Autopilot returns a 503 Service Unavailable error
 			// https://github.com/GoogleCloudPlatform/professional-services/blob/main/tools/ipam-autopilot/container/api.go#L81
-			getRangeById(id, ipam)
-		case parent != 0:
-			getRangesWithParent(parent, ipam)
-		case searchString != "":
-			searchStringInRanges(searchString, ipam)
+			client.GetRangeById(ipam, *opts)
+		case opts.Parent != 0:
+			client.GetRangesWithParent(ipam, *opts)
+		case opts.SearchString != "":
+			client.SearchStringInRanges(ipam, *opts)
 		default: // all ranges
-			searchStringInRanges("", ipam)
+			opts.SearchString = ""
+			client.SearchStringInRanges(ipam, *opts)
 		}
 	case "domains":
 		switch {
-		case id != 0:
+		case opts.Id != 0:
 			// if the domain is not found, IPAM Autopilot returns a 503 Service Unavailable error
 			// https://github.com/GoogleCloudPlatform/professional-services/blob/main/tools/ipam-autopilot/container/api.go#L370
-			getDomainById(id, ipam)
-		case searchString != "":
-			searchStringInDomains(searchString, ipam)
+			client.GetDomainById(ipam, *opts)
+		case opts.SearchString != "":
+			client.SearchStringInDomains(ipam, *opts)
 		default: // all Domainss
-			searchStringInDomains("", ipam)
+			opts.SearchString = ""
+			client.SearchStringInDomains(ipam, *opts)
 		}
 	case "status":
+		log.Println("hey there")
 		ipam.Status()
 	}
 }

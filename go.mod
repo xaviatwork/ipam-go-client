@@ -1,3 +1,3 @@
-module github.com/xaviatwork/ipam-client
+module github.com/xaviatwork/ipam
 
 go 1.22.3

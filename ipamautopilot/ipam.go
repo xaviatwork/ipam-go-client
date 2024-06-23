@@ -1,4 +1,4 @@
-package ipamclient
+package ipamautopilot
 
 import (
 	"bytes"
@@ -6,6 +6,13 @@ import (
 	"fmt"
 	"strings"
 )
+
+type Ipam interface {
+	RangeById(id int) (*Range, error)
+	Ranges() (*[]Range, error)
+	RoutingDomainById(id int) (*RoutingDomain, error)
+	RoutingDomains() (*[]RoutingDomain, error)
+}
 
 type RoutingDomain struct {
 	Id   int    `json:"id"`
@@ -65,11 +72,4 @@ func SearchString(ss ...string) bool {
 		}
 	}
 	return found
-}
-
-type IpamAutopilot interface {
-	Ranges() (*[]Range, error)
-	RangeById(id int) (*Range, error)
-	RoutingDomains() ([]RoutingDomain, error)
-	RoutingDomainById(id int) (*RoutingDomain, error)
 }
