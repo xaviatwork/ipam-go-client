@@ -66,7 +66,7 @@ func Usage() {
 
 Help:
   ipam -h, -help                    : Print this help
-  ipam range|domains -h, -help      : Print available flags for the command
+  ipam ranges|domains -h, -help     : Print available flags for the command
 
   All available flags support two dashes; e.g. --id
 `)
