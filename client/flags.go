@@ -45,13 +45,20 @@ func ParseCmdFlags(args []string) *Opts {
 		if err != nil {
 			log.Printf("%s\n", err.Error())
 		}
+
 	case "status":
 		return &Opts{Cmd: "status"}
+
 	default:
 		fmt.Printf("unknown command: %s\n", params.Cmd)
 		flag.Usage()
 		os.Exit(1)
 	}
+
+	if os.Getenv("IPAM_PRETTY") == "true" {
+		params.Pretty = true
+	}
+
 	return params
 }
 
@@ -72,6 +79,13 @@ func Usage() {
   ipam domains -s, -search <string> : all routing domains that contains <string> in the domains's Name or VPCs fields
 
   ipam status                       : returns IPAM status
+
+Global:
+  -pretty                           : display indented JSON form of ranges/domains
+
+Environment variables:
+  IPAM_PRETTY=true                  : default to display indented JSON
+  POKEMONIZE=true | ANONYMIZE=true  : anonymize range names and IPs
 
 Help:
   ipam -h, -help                    : Print this help
