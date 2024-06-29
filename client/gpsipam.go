@@ -188,6 +188,7 @@ func GetNonAllocatedIPs(ipam ipamautopilot.Ipam, opts Opts) {
 	}
 
 	availableIPs := ipsOnRange(mainRange.Cidr)
+	sizeMainRange := availableIPs
 
 	srs, err := ipam.Ranges()
 	if err != nil {
@@ -195,27 +196,52 @@ func GetNonAllocatedIPs(ipam ipamautopilot.Ipam, opts Opts) {
 	}
 
 	var allocated float64
-	t := table.NewWriter()
-	t.SetOutputMirror(os.Stdout)
-	t.AppendHeader(table.Row{"CIDR", "Allocated IPs", "Available IPs", "CIDR Name"})
-	t.AppendRow(table.Row{mainRange.Cidr, 0, availableIPs, mainRange.Name})
-	t.AppendSeparator()
+	switch opts.Format {
+	case "table":
+		t := table.NewWriter()
+		t.SetOutputMirror(os.Stdout)
+		t.AppendHeader(table.Row{"CIDR", "Allocated IPs", "Available IPs", "CIDR Name"})
+		t.AppendRow(table.Row{mainRange.Cidr, 0, availableIPs, mainRange.Name})
+		t.AppendSeparator()
 
-	for _, sr := range *srs {
-		if sr.Parent_id == opts.Id {
-			subnetRange := Anonymize(&sr)
-			ipsSubnet := ipsOnRange(sr.Cidr)
+		for _, sr := range *srs {
+			if sr.Parent_id == opts.Id {
+				subnetRange := Anonymize(&sr)
+				ipsSubnet := ipsOnRange(subnetRange.Cidr)
 
-			availableIPs = availableIPs - ipsSubnet
-			allocated = allocated + ipsSubnet
-
-			t.AppendRow(table.Row{subnetRange.Cidr, ipsSubnet, availableIPs, subnetRange.Name})
+				availableIPs = availableIPs - ipsSubnet
+				allocated = allocated + ipsSubnet
+				t.AppendRow(table.Row{subnetRange.Cidr, ipsSubnet, availableIPs, subnetRange.Name})
+			}
 		}
+		t.AppendSeparator()
+		t.AppendRow(table.Row{"Total", allocated, availableIPs, ""})
+		t.SetStyle(table.StyleLight)
+		t.Render()
+	case "number":
+		for _, sr := range *srs {
+			if sr.Parent_id == opts.Id {
+				subnetRange := Anonymize(&sr)
+				ipsSubnet := ipsOnRange(subnetRange.Cidr)
+
+				availableIPs = availableIPs - ipsSubnet
+				allocated = allocated + ipsSubnet
+			}
+		}
+		fmt.Printf("%.0f", availableIPs)
+	case "json":
+		for _, sr := range *srs {
+			if sr.Parent_id == opts.Id {
+				subnetRange := Anonymize(&sr)
+				ipsSubnet := ipsOnRange(subnetRange.Cidr)
+
+				availableIPs = availableIPs - ipsSubnet
+				allocated = allocated + ipsSubnet
+			}
+		}
+		fmt.Printf(`{"name": "%s", "range": "%s", "id": %d, "ip addreses": {"total": %.0f, "allocated": %.0f, "available": %.0f}}`, mainRange.Name, mainRange.Cidr, mainRange.Subnet_id, sizeMainRange, allocated, availableIPs)
 	}
-	t.AppendSeparator()
-	t.AppendRow(table.Row{"Total", allocated, availableIPs, ""})
-	t.SetStyle(table.StyleLight)
-	t.Render()
+
 }
 
 func SearchStringInDomains(ipam ipamautopilot.Ipam, opts Opts) {

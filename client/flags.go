@@ -9,8 +9,9 @@ import (
 
 type Opts struct {
 	Cmd          string
-	Id           int
+	Format       string
 	Free         bool
+	Id           int
 	Parent       int
 	Pretty       bool
 	SearchString string
@@ -27,6 +28,7 @@ func ParseCmdFlags(args []string) *Opts {
 		flags.BoolVar(&params.Free, "free", false, "get non-allocated IP addresses from given main range id")
 		flags.IntVar(&params.Parent, "parent", 0, "get ranges with given parent")
 		flags.StringVar(&params.SearchString, "search", "", "search string in range Name and CIDR fields")
+		flags.StringVar(&params.Format, "format", "table", "format of the -free command")
 		flags.StringVar(&params.SearchString, "s", "", "search string in range Name and CIDR fields")
 		err := flags.Parse(args[1:])
 		if err != nil {
