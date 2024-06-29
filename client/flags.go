@@ -60,6 +60,10 @@ func Usage() {
   ipam ranges                       : all subnet ranges
   ipam ranges -id <int>             : range with Subnet Id equal to <int>
   ipam ranges -id <int> -free       : number of free / non-allocated IP addresses for range
+  ipam ranges -id <int> -free -format [ table (default) | json | number]
+                                        - table  : displays CIDR, Allocated IPs, Available IPs and CIDR Name
+                                        - json   : returns a JSON object
+                                        - number : returns the number of available IP addresses  
   ipam ranges -parent <int>         : all subnet ranges with a parent Subnet Id matching <int>
   ipam ranges -s, -search <string>  : all subnet ranges that contains <string> in the subnet's Name or CIDR fields
 
