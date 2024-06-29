@@ -7,9 +7,9 @@ import (
 	"log"
 	"math"
 	"math/rand/v2"
+	"net"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/table"
@@ -168,6 +168,12 @@ func GetDomainById(ipam ipamautopilot.Ipam, opts Opts) {
 	fmt.Printf("%s\n", domain.String())
 }
 
+func ipsOnRange(cidr string) float64 {
+	_, mask, _ := net.ParseCIDR(cidr)
+	size, _ := mask.Mask.Size()
+	return math.Pow(2, float64(32)-float64(size))
+}
+
 func GetNonAllocatedIPs(ipam ipamautopilot.Ipam, opts Opts) {
 	mr, err := ipam.RangeById(opts.Id)
 	if err != nil {
@@ -181,12 +187,7 @@ func GetNonAllocatedIPs(ipam ipamautopilot.Ipam, opts Opts) {
 		os.Exit(1)
 	}
 
-	// lleig
-	s := strings.SplitAfter(mainRange.Cidr, "/")
-	sizeMainRange := s[len(s)-1]
-	size, _ := strconv.Atoi(sizeMainRange)
-	ipsMainRange := math.Pow(2, float64(32)-float64(size))
-	availableIPs := ipsMainRange
+	availableIPs := ipsOnRange(mainRange.Cidr)
 
 	srs, err := ipam.Ranges()
 	if err != nil {
@@ -203,10 +204,8 @@ func GetNonAllocatedIPs(ipam ipamautopilot.Ipam, opts Opts) {
 	for _, sr := range *srs {
 		if sr.Parent_id == opts.Id {
 			subnetRange := Anonymize(&sr)
-			s := strings.SplitAfter(subnetRange.Cidr, "/")
-			strblock := s[len(s)-1]
-			size, _ := strconv.Atoi(strblock)
-			ipsSubnet := math.Pow(2, float64(32)-float64(size))
+			ipsSubnet := ipsOnRange(sr.Cidr)
+
 			availableIPs = availableIPs - ipsSubnet
 			allocated = allocated + ipsSubnet
 
