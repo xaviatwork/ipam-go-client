@@ -10,6 +10,7 @@ import (
 type Opts struct {
 	Cmd          string
 	Id           int
+	Free         int
 	Parent       int
 	Pretty       bool
 	SearchString string
@@ -23,6 +24,7 @@ func ParseCmdFlags(args []string) *Opts {
 		flags := flag.NewFlagSet(params.Cmd, flag.ExitOnError)
 		flags.BoolVar(&params.Pretty, "pretty", false, "pretty print range")
 		flags.IntVar(&params.Id, "id", 0, "get range with given id")
+		flags.IntVar(&params.Free, "free", 0, "get free IP addresses from given range id")
 		flags.IntVar(&params.Parent, "parent", 0, "get ranges with given parent")
 		flags.StringVar(&params.SearchString, "search", "", "search string in range Name and CIDR fields")
 		flags.StringVar(&params.SearchString, "s", "", "search string in range Name and CIDR fields")
@@ -54,6 +56,7 @@ func ParseCmdFlags(args []string) *Opts {
 func Usage() {
 	fmt.Printf(`Usage:
   ipam ranges                       : all subnet ranges
+  ipam ranges -free <int>           : number of free / non-allocated IP addresses for range
   ipam ranges -id <int>             : range with Subnet Id equal to <int>
   ipam ranges -parent <int>         : all subnet ranges with a parent Subnet Id matching <int>
   ipam ranges -s, -search <string>  : all subnet ranges that contains <string> in the subnet's Name or CIDR fields

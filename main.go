@@ -36,6 +36,8 @@ func main() {
 			client.GetRangeById(ipam, *opts)
 		case opts.Parent != 0:
 			client.GetRangesWithParent(ipam, *opts)
+		case opts.Free != 0:
+			client.GetNonAllocatedIPs(ipam, *opts)
 		case opts.SearchString != "":
 			client.SearchStringInRanges(ipam, *opts)
 		default: // all ranges
