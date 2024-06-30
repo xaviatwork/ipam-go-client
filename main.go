@@ -9,10 +9,19 @@ import (
 	"github.com/xaviatwork/ipam/client"
 )
 
+var version string = "v0.0.0"
+
 func main() {
 	// main flags (just -h, --help)
+	var ipamVersion bool
+	flag.BoolVar(&ipamVersion, "version", false, "displays IPAM Client version")
+	flag.BoolVar(&ipamVersion, "v", false, "displays IPAM Client version")
 	flag.Usage = func() { client.Usage() }
 	flag.Parse()
+	if ipamVersion {
+		fmt.Printf("IPAM Client version: %s\n", version)
+		os.Exit(0)
+	}
 	// cmd flags
 	if len(os.Args) < 2 {
 		client.Usage()
