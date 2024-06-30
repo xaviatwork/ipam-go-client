@@ -90,7 +90,8 @@ Environment variables:
 Help:
   ipam -h, -help                    : Print this help
   ipam ranges|domains -h, -help     : Print available flags for the command
-  ipam -v | ipam -version           : Print IPAM Client version
+  
+  ipam -v, -version                 : Print IPAM Client version
 
   All available flags support two dashes; e.g. --id
 `)
